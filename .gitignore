@@ -1,4 +1,3 @@
-#buildout's specific
 .installed.cfg
 eggs/*
 bin/*
