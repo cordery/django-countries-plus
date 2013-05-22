@@ -4,7 +4,7 @@ django-countries-plus
 
 django-countries-plus provides a model and fixture containing all top level country data from Geonames.org (http://download.geonames.org/export/dump/countryInfo.txt)
 
-The model provides the following fields (original geonames.org column name in parentheses) are:
+The model provides the following fields (original geonames.org column name in parentheses).
 
 * iso (ISO)
 * iso3 (ISO3)
@@ -26,16 +26,27 @@ The model provides the following fields (original geonames.org column name in pa
 * neighbors (neighbours)
 * equivalent_fips_code (EquivalentFipsCode)
 
-Installation & Use
-========= 
 
-Install:
-	pip install django-countries-plus
+------------
+Installation
+------------
 
-Usage:
+::
 
-	1. Add countriesplus to your INSTALLED_APPS
-	2. Run python manage.py syncdb to install the countriesplus fixtures
-	3. In your code use:
-		from countriesplus.models import Country
-		usa = Country.objects.get(iso3='USA')
+    pip install django-countries-plus
+
+
+------------
+Usage
+------------
+
+1. Add countriesplus to your INSTALLED_APPS
+
+2. Sync your fixtures::
+
+        python manage.py syncdb 
+        
+3. In your code use::
+
+        from countriesplus.models import Country
+        usa = Country.objects.get(iso3='USA')
