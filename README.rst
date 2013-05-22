@@ -40,7 +40,7 @@ Installation
 Usage
 ------------
 
-1. Add countriesplus to your INSTALLED_APPS
+1. Add ``countries_plus`` to your INSTALLED_APPS
 
 2. Sync your fixtures::
 
@@ -48,5 +48,5 @@ Usage
         
 3. In your code use::
 
-        from countriesplus.models import Country
+        from countries_plus.models import Country
         usa = Country.objects.get(iso3='USA')
