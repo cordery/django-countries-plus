@@ -1,12 +1,14 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name='django-countries-plus',
-    version='0.1.2',
+    version='0.1.3',
     author='Andrew Cordery',
     author_email='cordery@gmail.com',
-    packages=['countries_plus',],
+    packages=find_packages(),
     url='http://pypi.python.org/pypi/django-countries-plus/',
+    zip_safe=False,
+    include_package_data=True,
     license='LICENSE.txt',
     description='A django model & fixture containing all data from the countries table of Geonames.org',
     long_description=open('README.rst').read(),

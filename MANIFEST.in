@@ -1,3 +1,2 @@
 include *.txt *.rst *.json
-recursive-include docs *.txt
-recursive-include countries_plus/fixtures *.json
+recursive-include countries_plus *
