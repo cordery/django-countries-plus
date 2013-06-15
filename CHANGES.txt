@@ -1,1 +1,2 @@
+v0.1.5, 14/06/13 -- Corrected model max_length attributes to properly match data.
 v0.1.0, 22/05/13 -- Initial release.
