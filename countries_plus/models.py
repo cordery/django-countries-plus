@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 
 
 class Country(models.Model):
+
     class Meta:
         verbose_name = _('Country')
         verbose_name_plural = _('Countries')
@@ -33,6 +34,8 @@ class Country(models.Model):
         return u'%s' % (self.name,)
 
 """
+
+
 Fixture analysis showing max length encountered per field
 
 {

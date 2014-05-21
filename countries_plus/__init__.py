@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from .models import Country
 import logging
 
@@ -14,19 +15,35 @@ logger = logging.getLogger('django')
 #  Cloudflare is an example of a service that will add the country iso to the request header,
 #  using the meta tag HTTP_CF_IPCOUNTRY
 def get_country_by_request(request):
-    header_name = settings.COUNTRIES_PLUS_COUNTRY_HEADER
-    default_iso = settings.COUNTRIES_PLUS_DEFAULT_ISO
+    country = None
+    default_iso = None
 
-    if header_name:
-        geoip_request_iso = request.META.get(header_name)
+    try:
+        header_name = settings.COUNTRIES_PLUS_COUNTRY_HEADER
+    except AttributeError:
+        raise AttributeError("COUNTRIES_PLUS_COUNTRY_HEADER setting missing")
+
+    if not settings.COUNTRIES_PLUS_COUNTRY_HEADER:
+        raise AttributeError("COUNTRIES_PLUS_COUNTRY_HEADER can not be empty")
+
+    try:
+        default_iso = settings.COUNTRIES_PLUS_DEFAULT_ISO.upper()
+    except AttributeError:
+        pass
+
+    geoip_request_iso = request.META.get(header_name, '')
+    if geoip_request_iso:
         try:
-            return Country.objects.get(iso=geoip_request_iso.upper())
-        except:
-            logger.warning("Could not find a country matching '%s' from provided meta header '%s'." % (geoip_request_iso, header_name))
-            if default_iso:
-                logger.warning("Setting country to provided default '%s'." % default_iso)
-                try:
-                    return Country.objects.get(iso=default_iso.upper())
-                except:
-                    logger.warning("Could not find a country matching COUNTRIES_PLUS_DEFAULT_ISO of '%s'. Not adding country to request." % default_iso)
-    return None
+            country = Country.objects.get(iso=geoip_request_iso.upper())
+        except ObjectDoesNotExist:
+            pass
+
+    if not country:
+        logger.warning("countries_plus:  Could not find a country matching '%s' from provided meta header '%s'." % (geoip_request_iso, header_name))
+        if default_iso:
+            logger.warning("countries_plus:  Setting country to provided default '%s'." % default_iso)
+            try:
+                country = Country.objects.get(iso=default_iso)
+            except ObjectDoesNotExist:
+                logger.warning("countries_plus:  Could not find a country matching COUNTRIES_PLUS_DEFAULT_ISO of '%s'." % default_iso)
+    return country

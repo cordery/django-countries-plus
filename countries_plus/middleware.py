@@ -1,5 +1,7 @@
 import logging
+
 from . import get_country_by_request
+
 
 logger = logging.getLogger('django')
 
@@ -9,3 +11,5 @@ class AddRequestCountryMiddleware(object):
         country = get_country_by_request(request)
         if country:
             request.country = country
+        else:
+            logger.warning('countries_plus:  Could not retrieve country, not adding to request.')
