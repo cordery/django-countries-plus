@@ -1,6 +1,6 @@
-===========
+=====================
 django-countries-plus
-===========
+=====================
 
 django-countries-plus provides a model and fixture containing all top level country data from Geonames.org (http://download.geonames.org/export/dump/countryInfo.txt)
 
@@ -55,14 +55,18 @@ Usage
         usa = Country.objects.get(iso3='USA')
 
 
-Enbling the optional middleware::
-
+Enabling the optional middleware:
+---------------------------------
 1.  Follow steps 1 & 2 above.
 
-2.  Add 'countries_plus.middleware.AddRequestCountryMiddleware' to your middleware.
+2.  Add ``countries_plus.middleware.AddRequestCountryMiddleware`` to your middleware.
 
-3.  add the following two settings:
-    COUNTRIES_PLUS_COUNTRY_HEADER   -   A string defining the name of the meta header that provides the country code.  Ex: 'HTTP_CF_COUNTRY' (from https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-)
+3.  add the following two settings to your settings.py:
 
-    COUNTRIES_PLUS_DEFAULT_ISO  -   A string containing an iso code for the country you want to use as a fallback in the case of a missing or malformed geoip header.  Ex:  'US' or 'DE' or 'BR'
+    ``COUNTRIES_PLUS_COUNTRY_HEADER``   -   A string defining the name of the meta header that provides the country code.  Ex: 'HTTP_CF_COUNTRY' (from https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-)
 
+    ``COUNTRIES_PLUS_DEFAULT_ISO``  -   A string containing an iso code for the country you want to use as a fallback in the case of a missing or malformed geoip header.  Ex:  'US' or 'DE' or 'BR'
+
+Compatibility
+-------------
+Compatible with Django 1.2+
