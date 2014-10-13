@@ -70,3 +70,12 @@ Enabling the optional middleware:
 Compatibility
 -------------
 Compatible with Django 1.2+
+
+---------------------------------------
+Integrating with django-languages-plus
+---------------------------------------
+If you also have django-languages-plus(https://pypi.python.org/pypi/django-languages-plus) installed then you can run the following command once to associate the two datasets and generate a list of culture codes (pt_BR for example)::
+
+        from languages_plus.utils import associate_countries_and_languages
+        associate_countries_and_languages()
+
