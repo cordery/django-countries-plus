@@ -1,3 +1,4 @@
+v0.3.1 09/01/15 -- Now compatible with Python 3
 v0.3, 08/09/14 -- Now compatible with Django 1.7 thanks to mrben
 v0.2, 13/02/14 -- Added middleware that adds the request country to the request object.
 v0.1.5, 14/06/13 -- Corrected model max_length attributes to properly match data.
