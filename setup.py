@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-countries-plus',
-    version='0.3',
+    version='0.3.2',
     author='Andrew Cordery',
     author_email='cordery@gmail.com',
     packages=find_packages(),
