@@ -6,7 +6,7 @@ __author__ = 'luiscberrocal'
 
 class TestCountry(TestCase):
 
-    def test_create(self):
+    def test_count(self):
         country_count = Country.objects.all().count()
         self.assertEqual(country_count,252)
 
