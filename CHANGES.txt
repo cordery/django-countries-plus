@@ -1,3 +1,4 @@
+v0.3.3, 27/01/15 -- Now uses Django 1.7 data migration pattern
 v0.3.2, 10/01/15 -- Corrected version number on setup.py
 v0.3.1, 09/01/15 -- Now compatible with Python 3 thanks to luiscberrocal
 v0.3, 08/09/14 -- Now compatible with Django 1.7 thanks to mrben
