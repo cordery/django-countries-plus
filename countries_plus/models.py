@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 
-
+@python_2_unicode_compatible
 class Country(models.Model):
 
     class Meta:
@@ -30,7 +31,7 @@ class Country(models.Model):
     neighbours = models.CharField(max_length=50, blank=True, null=True)
     equivalent_fips_code = models.CharField(max_length=4, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % (self.name,)
 
 """
