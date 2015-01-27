@@ -69,7 +69,7 @@ Enabling the optional middleware:
 
 Compatibility
 -------------
-Compatible with Django 1.2+
+Should work on most versions of Django, however if you are using Django 1.7, tests will fail unless you are using Django 1.7.2 or higher due to a bug in earlier versions.
 
 ---------------------------------------
 Integrating with django-languages-plus
