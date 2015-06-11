@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Country
+from django.apps import AppConfig
 import logging
 
 
@@ -17,6 +17,7 @@ logger = logging.getLogger('django')
 def get_country_by_request(request):
     country = None
     default_iso = None
+    mymodel = sender.get_medel('Country')
 
     try:
         header_name = settings.COUNTRIES_PLUS_COUNTRY_HEADER
@@ -34,7 +35,7 @@ def get_country_by_request(request):
     geoip_request_iso = request.META.get(header_name, '')
     if geoip_request_iso:
         try:
-            country = Country.objects.get(iso=geoip_request_iso.upper())
+            country = mymodel.objects.get(iso=geoip_request_iso.upper())
         except ObjectDoesNotExist:
             pass
 
@@ -43,7 +44,7 @@ def get_country_by_request(request):
         if default_iso:
             logger.warning("countries_plus:  Setting country to provided default '%s'." % default_iso)
             try:
-                country = Country.objects.get(iso=default_iso)
+                country = mymodel.objects.get(iso=default_iso)
             except ObjectDoesNotExist:
                 logger.warning("countries_plus:  Could not find a country matching COUNTRIES_PLUS_DEFAULT_ISO of '%s'." % default_iso)
     return country
