@@ -209,11 +209,12 @@ def update_geonames_data():
     :return: num_updated, num_created
     :raise GeonamesParseError:
     """
-    r = requests.get('http://download.geonames.org/export/dump/countryInfo.txt')
+    r = requests.get('http://download.geonames.org/export/dump/countryInfo.txt', stream=True)
     data_headers = []
     num_created = 0
     num_updated = 0
     for line in r.iter_lines():
+        line = line.decode()
         if line[0] == "#":
             if line[0:4] == "#ISO":
                 data_headers = line.strip('# ').split('\t')
@@ -227,8 +228,9 @@ def update_geonames_data():
         data = {DATA_HEADERS_MAP[DATA_HEADERS_ORDERED[x]]: bits[x] for x in range(0, len(bits))}
         if data['currency_code']:
             data['currency_symbol'] = CURRENCY_SYMBOLS.get(data['currency_code'])
-        [data.pop(x) for x, y in data.items() if not y]
-        country, created = Country.objects.update_or_create(iso=data['iso'], defaults=data)
+
+        clean_data = {x: y for x, y in data.items() if y}
+        country, created = Country.objects.update_or_create(iso=clean_data['iso'], defaults=clean_data)
         if created:
             num_created += 1
         else:
