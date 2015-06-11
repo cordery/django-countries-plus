@@ -12,13 +12,13 @@ Badges
 ------
 
 .. image:: https://travis-ci.org/cordery/django-countries-plus.svg
-:target: https://travis-ci.org/cordery/django-countries-plus
+    :target: https://travis-ci.org/cordery/django-countries-plus
 .. image:: https://coveralls.io/repos/cordery/django-countries-plus/badge.svg
-:target: https://coveralls.io/r/cordery/django-countries-plus
+    :target: https://coveralls.io/r/cordery/django-countries-plus
 .. image:: https://requires.io/github/cordery/django-countries-plus/requirements.svg?branch=master
-:target: https://requires.io/github/cordery/django-countries-plus/requirements/?branch=master
+    :target: https://requires.io/github/cordery/django-countries-plus/requirements/?branch=master
 .. image:: https://www.codacy.com/project/badge/c74f1b1041f44940b58e0e1587b10453?style=flat-square
-:target: https://www.codacy.com/app/cordery/django-countries-plus
+    :target: https://www.codacy.com/app/cordery/django-countries-plus
 
 
 
