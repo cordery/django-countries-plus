@@ -14,6 +14,7 @@ setup(
     long_description=open('README.rst').read(),
     install_requires=[
         "Django >= 1.2",
+        "requests>=2"
     ],
     test_suite="runtests.runtests",
 )
