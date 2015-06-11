@@ -1,10 +1,15 @@
+import logging
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 
+logger = logging.getLogger(__name__)
+
+
 @python_2_unicode_compatible
 class Country(models.Model):
-
     class Meta:
         verbose_name = _('Country')
         verbose_name_plural = _('Countries')
@@ -12,12 +17,12 @@ class Country(models.Model):
 
     iso = models.CharField(max_length=2, primary_key=True)
     iso3 = models.CharField(max_length=3, unique=True)
-    iso_numeric = models.IntegerField(max_length=3, unique=True)
+    iso_numeric = models.IntegerField(unique=True)
     fips = models.CharField(max_length=3, blank=True, null=True)
     name = models.CharField(max_length=50, unique=True)
     capital = models.CharField(max_length=30, blank=True, null=True)
-    area = models.IntegerField(max_length=8, blank=True, null=True)
-    population = models.IntegerField(max_length=10, blank=True, null=True)
+    area = models.DecimalField(max_digits=9, decimal_places=1, blank=True, null=True)
+    population = models.IntegerField(blank=True, null=True)
     continent = models.CharField(max_length=2, blank=True, null=True)
     tld = models.CharField(max_length=5, blank=True, null=True)
     currency_code = models.CharField(max_length=3, blank=True, null=True)
@@ -27,12 +32,49 @@ class Country(models.Model):
     postal_code_format = models.CharField(max_length=60, blank=True, null=True)
     postal_code_regex = models.CharField(max_length=175, blank=True, null=True)
     languages = models.CharField(max_length=100, blank=True, null=True)
-    geonameid = models.IntegerField(max_length=7, blank=True, null=True)
+    geonameid = models.IntegerField(blank=True, null=True)
     neighbours = models.CharField(max_length=50, blank=True, null=True)
     equivalent_fips_code = models.CharField(max_length=4, blank=True, null=True)
 
+    @staticmethod
+    def get_by_request(request):
+        from django.conf import settings
+        country = None
+        default_iso = None
+
+        try:
+            header_name = settings.COUNTRIES_PLUS_COUNTRY_HEADER
+        except AttributeError:
+            raise AttributeError("COUNTRIES_PLUS_COUNTRY_HEADER setting missing.  This setting must be present when using the countries_plus middleware.")
+
+        if not settings.COUNTRIES_PLUS_COUNTRY_HEADER:
+            raise AttributeError("COUNTRIES_PLUS_COUNTRY_HEADER can not be empty.   This setting must be present when using the countries_plus middleware.")
+
+        try:
+            default_iso = settings.COUNTRIES_PLUS_DEFAULT_ISO.upper()
+        except AttributeError:
+            pass
+
+        geoip_request_iso = request.META.get(header_name, '')
+        if geoip_request_iso:
+            try:
+                country = Country.objects.get(iso=geoip_request_iso.upper())
+            except ObjectDoesNotExist:
+                pass
+
+        if not country:
+            logger.warning("countries_plus:  Could not find a country matching '%s' from provided meta header '%s'." % (geoip_request_iso, header_name))
+            if default_iso:
+                logger.warning("countries_plus:  Setting country to provided default '%s'." % default_iso)
+                try:
+                    country = Country.objects.get(iso=default_iso)
+                except ObjectDoesNotExist:
+                    logger.warning("countries_plus:  Could not find a country matching COUNTRIES_PLUS_DEFAULT_ISO of '%s'." % default_iso)
+        return country
+
     def __str__(self):
         return u'%s' % (self.name,)
+
 
 """
 

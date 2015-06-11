@@ -22,3 +22,5 @@ tempfile
 # coverage 
 .coverage
 _build
+
+*.sqlite3
