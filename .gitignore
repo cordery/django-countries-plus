@@ -19,8 +19,6 @@ downloads/*
 tempfile
 *.swp
 
-# coverage 
-.coverage
 _build
 
 *.sqlite3

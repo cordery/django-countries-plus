@@ -111,7 +111,7 @@ Add the Request Country to the Request Context
 
 Compatibility
 -------------
-Python 2 & 3, Django 1.4+, however if you are using Django 1.7, tests will fail unless you are using Django 1.7.2 or higher due to a bug in earlier versions.
+Python 2.7+ & 3.3+, Django 1.4+, however if you are using Django 1.7, tests will fail unless you are using Django 1.7.2 or higher due to a bug in earlier versions.
 
 
 
