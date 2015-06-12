@@ -40,6 +40,6 @@ install:
   - pip install --upgrade setuptools pip
   - pip install -q $DJANGO
   - pip install .
-script: coverage run setup.py test
+script: coverage run --source=countries_plus setup.py test
 after_success:
   codecov
