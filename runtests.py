@@ -1,7 +1,7 @@
 # python setup.py test
 #   or
 # python runtests.py
-
+import os
 import sys
 
 from django import VERSION as django_version
@@ -18,6 +18,8 @@ settings.configure(
     DATABASES={
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(os.path.dirname(__file__), 'test.db'),
+            'TEST_NAME': os.path.join(os.path.dirname(__file__), 'test.db'),
         }
     },
     ROOT_URLCONF=TEST_APP + '.urls',
@@ -62,20 +64,22 @@ settings.configure(
     # For Django <1.8
     TEMPLATE_CONTEXT_PROCESSORS=('countries_plus.context_processors.add_request_country',
                                  "django.contrib.auth.context_processors.auth",
-                                 "django.template.context_processors.debug",
-                                 "django.template.context_processors.i18n",
-                                 "django.template.context_processors.media",
-                                 "django.template.context_processors.static",
-                                 "django.template.context_processors.tz",
+                                 "django.core.context_processors.debug",
+                                 "django.core.context_processors.i18n",
+                                 "django.core.context_processors.media",
+                                 "django.core.context_processors.static",
+                                 "django.core.context_processors.tz",
                                  "django.contrib.messages.context_processors.messages"),
     # countries_plus settings
     COUNTRIES_PLUS_COUNTRY_HEADER='GEOIP_HEADER',
-    COUNTRIES_PLUS_DEFAULT_ISO='US'
+    COUNTRIES_PLUS_DEFAULT_ISO='US',
 )
-# Django 1.7+ initialize app registry
-from django import setup
 
-setup()
+# Django 1.7+ initialize app registry
+if django_version[1] >= 7:
+    from django import setup
+
+    setup()
 
 try:
     from django.test.runner import DiscoverRunner as TestRunner  # Django 1.6+

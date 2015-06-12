@@ -24,3 +24,7 @@ tempfile
 _build
 
 *.sqlite3
+.vagrant
+*.egg
+python3_venv
+Vagrantfile

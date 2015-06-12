@@ -1,5 +1,8 @@
 # coding=utf-8
+from django.core.exceptions import ObjectDoesNotExist
+
 import requests
+import six
 
 from countries_plus.models import Country
 
@@ -230,9 +233,22 @@ def update_geonames_data():
             data['currency_symbol'] = CURRENCY_SYMBOLS.get(data['currency_code'])
 
         clean_data = {x: y for x, y in data.items() if y}
-        country, created = Country.objects.update_or_create(iso=clean_data['iso'], defaults=clean_data)
+
+        # Avoiding update_or_create to maintain compatibility with Django 1.5
+        try:
+            country = Country.objects.get(iso=clean_data['iso'])
+            created = False
+        except ObjectDoesNotExist:
+            country = Country.objects.create(**clean_data)
+            created = True
+        for k, v in six.iteritems(clean_data):
+            setattr(country, k, v)
+
+        country.save()
+
         if created:
             num_created += 1
         else:
             num_updated += 1
     return num_updated, num_created
+

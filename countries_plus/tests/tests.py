@@ -1,9 +1,4 @@
-import gzip
-import os
-
-from django.core import serializers
-
-from django.test import SimpleTestCase, TestCase
+from django.test import TestCase
 
 from django.test import Client
 
@@ -29,7 +24,7 @@ class RequestMock(RequestFactory):
         return request
 
 
-class TestCountryByRequest(SimpleTestCase):
+class TestCountryByRequest(TestCase):
     def setUp(self):
         self.request_without_geoip = RequestMock()
         self.request_without_geoip.META = {}
@@ -90,20 +85,12 @@ class TestContextProcessor(TestCase):
         self.client = Client()
 
     def test_context_processor(self):
-        with self.settings(COUNTRIES_PLUS_COUNTRY_HEADER='GEOIP_HEADER', COUNTRIES_PLUS_DEFAULT_ISO='US'):
-            response = self.client.get('/')
-            self.assertIsInstance(response.context.get('country'), Country)
+        response = self.client.get('/')
+        self.assertIsInstance(response.context.get('country'), Country)
 
 
 class TestFixtures(TestCase):
-    def setUp(self):
-        fixture_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'fixtures'))
-        fixture_filename = 'initial_data.json.gz'
-        fixture_file = os.path.join(fixture_dir, fixture_filename)
-        with gzip.open(fixture_file, 'rb') as fixture:
-            objects = serializers.deserialize('json', fixture, ignorenonexistent=True)
-            for obj in objects:
-                obj.save()
+    fixtures = ['countries_data']
 
     def test_count(self):
         country_count = Country.objects.all().count()

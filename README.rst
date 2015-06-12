@@ -59,14 +59,14 @@ Step 1: Install From PyPi
 
 Step 2: Add ``countries_plus`` to your INSTALLED_APPS
 
-Step 3: Run ``python manage.py sync`` or ``python manage.py migrate`` (Django 1.7+)
+Step 3: Run ``python manage.py sync`` (Django <1.7) or ``python manage.py migrate`` (Django 1.7+)
 
-Step 4: Load the Countries Data (Required for Django 1.7+)
+Step 4: Load the Countries Data
 
 1. Load the countries data into your database with the update_countries_plus management command.
     ``python manage.py update_countries_plus``
 2. (alternative) Load the provided fixture from the fixtures directory.
-    ``python manage.py loaddata PATH_TO_COUNTRIES_PLUS/countries_plus/initial_data.json.gz``
+    ``python manage.py loaddata PATH_TO_COUNTRIES_PLUS/countries_plus/countries_data.json.gz``
     
 
 
@@ -111,7 +111,7 @@ Add the Request Country to the Request Context
 
 Compatibility
 -------------
-Should work on most versions of Django, however if you are using Django 1.7, tests will fail unless you are using Django 1.7.2 or higher due to a bug in earlier versions.
+Python 2 & 3, Django 1.4+, however if you are using Django 1.7, tests will fail unless you are using Django 1.7.2 or higher due to a bug in earlier versions.
 
 
 
@@ -126,6 +126,7 @@ If you also have django-languages-plus(https://pypi.python.org/pypi/django-langu
 Notes on 1.0.0
 --------------
 * The data migration has been removed in favour of the new management command and manually loading the fixture.
+* The fixture is no longer named initial_data and so must be loaded manually, if desired.
 * In order to provide better compatibility with the way Django loads apps the Country model is no longer importable directly from countries_plus.
 * The get_country_by_request utility function has been moved into the Country model, and is available as Country.get_by_request(request)
 * Test coverage has been substantially improved.
