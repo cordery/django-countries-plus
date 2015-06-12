@@ -130,5 +130,4 @@ Notes on 1.0.0
 * In order to provide better compatibility with the way Django loads apps the Country model is no longer importable directly from countries_plus.
 * The get_country_by_request utility function has been moved into the Country model, and is available as Country.get_by_request(request)
 * Test coverage has been substantially improved.
-* If you have been running an earlier version you should run python manage.py update_countries_plus to update your
-datatables as they may contain incorrect data.
+* If you have been running an earlier version you should run python manage.py update_countries_plus to update your data tables as they may contain incorrect data.
