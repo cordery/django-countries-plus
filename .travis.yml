@@ -34,11 +34,12 @@ matrix:
       env: DJANGO=django==1.8
     - python: "pypy"
       env: DJANGO=django==1.8
+before_install:
+  - pip install coverage codecov
 install:
   - pip install --upgrade setuptools pip
   - pip install -q $DJANGO
-  - pip install coveralls coverage
   - pip install .
 script: coverage run setup.py test
 after_success:
-  - coveralls
+  codecov

@@ -13,8 +13,8 @@ Badges
 
 .. image:: https://travis-ci.org/cordery/django-countries-plus.svg
     :target: https://travis-ci.org/cordery/django-countries-plus
-.. image:: https://coveralls.io/repos/cordery/django-countries-plus/badge.svg
-    :target: https://coveralls.io/r/cordery/django-countries-plus
+.. image:: http://codecov.io/github/cordery/django-countries-plus/coverage.svg?branch=master
+    :target: http://codecov.io/github/cordery/django-countries-plus?branch=master
 .. image:: https://requires.io/github/cordery/django-countries-plus/requirements.svg?branch=master
     :target: https://requires.io/github/cordery/django-countries-plus/requirements/?branch=master
 .. image:: https://www.codacy.com/project/badge/c74f1b1041f44940b58e0e1587b10453?style=flat-square
