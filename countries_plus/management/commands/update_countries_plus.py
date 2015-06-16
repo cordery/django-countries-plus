@@ -1,6 +1,6 @@
-from django.core.management.base import BaseCommand
-
 from countries_plus.utils import update_geonames_data
+
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -8,5 +8,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         num_updated, num_created = update_geonames_data()
-        print "Countries Plus data has been succesfully updated from geonames.org.  " \
-              "%s countries were updated, %s countries were created." % (num_updated, num_created)
+        self.stdout.write(
+            "Countries Plus data has been succesfully updated from geonames.org.  "
+            "%s countries were updated, %s countries were created." % (num_updated, num_created))
