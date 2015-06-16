@@ -123,6 +123,12 @@ If you also have django-languages-plus(https://pypi.python.org/pypi/django-langu
         associate_countries_and_languages()
 
 
+Notes on 1.0.1
+--------------
+* Two countries (Dominican Republic and Puerto Rico) have two phone number prefixes instead of 1.  These prefixes are now comma separated.
+* The Country model has had all fields with undefined lengths (ex: name) expanded to max_length=255.  Defined length fields (ex: Iso, Iso3) are unchanged.
+* The Country model will no validate on save and reject values of the wrong length.  The test suite has been expanded to test this.
+
 Notes on 1.0.0
 --------------
 * The data migration has been removed in favour of the new management command and manually loading the fixture.

@@ -1,14 +1,18 @@
+from copy import deepcopy
+from decimal import Decimal
+
+from django.core.exceptions import ValidationError
+
+from django.core.management import call_command
 from django.test import TestCase
-
 from django.test import Client
-
 from django.core.handlers.base import BaseHandler
 
 from django.test.client import RequestFactory
 
 from countries_plus.models import Country
 from countries_plus.middleware import AddRequestCountryMiddleware
-from countries_plus.utils import update_geonames_data
+from countries_plus.utils import update_geonames_data, parse_geonames_data, GeonamesParseError
 
 
 class RequestMock(RequestFactory):
@@ -109,8 +113,9 @@ class TestUpdateGeonamesData(TestCase):
     def tearDown(self):
         Country.objects.all().delete()
 
-    def test_first_update_geonames_data(self):
-        # If the geonames.org dataset adds/removes a country or changes its format this test will fail, which is intended.
+    def test_update_geonames_data(self):
+        # If the geonames.org dataset adds/removes a country or changes its format
+        # this test will fail, which is intended.
         num_updated, num_created = update_geonames_data()
         self.assertEqual(num_updated, 0)
         self.assertEqual(num_created, 252)
@@ -118,3 +123,92 @@ class TestUpdateGeonamesData(TestCase):
         num_updated, num_created = update_geonames_data()
         self.assertEqual(num_updated, 252)
         self.assertEqual(num_created, 0)
+
+        self.assertEqual(Country.objects.count(), 252)
+
+
+class TestParseGeonamesData(TestCase):
+    valid_data = [
+        u"#ISO	ISO3	ISO-Numeric	fips	Country	Capital	Area(in sq km)	Population	Continent	tld	CurrencyCode	CurrencyName	Phone	Postal Code Format	Postal Code Regex	Languages	geonameid	neighbours	EquivalentFipsCode".encode(),
+        u"AD	AND	020	AN	Andorra	Andorra la Vella	468	84000	EU	.ad	EUR	Euro	376	AD###	^(?:AD)*(\d{3})$	ca	3041565	ES,FR	".encode()
+    ]
+    invalid_data_no_header = [
+        u"AD	AND	020	AN	Andorra	Andorra la Vella	468	84000	EU	.ad	EUR	Euro	376	AD###	^(?:AD)*(\d{3})$	ca	3041565	ES,FR	".encode()
+    ]
+    invalid_data_bad_header = [
+        u"#ISO  Country	Capital	Area(in sq km)	Population	Continent	tld	CurrencyCode	CurrencyName	Phone	Postal Code Format	Postal Code Regex	Languages	geonameid	neighbours	EquivalentFipsCode".encode(),
+        u"AD	AND	020	AN	Andorra	Andorra la Vella	468	84000	EU	.ad	EUR	Euro	376	AD###	^(?:AD)*(\d{3})$	ca	3041565	ES,FR	".encode()
+    ]
+    invalid_data_invalid_field_length = [
+        u"#ISO	ISO3	ISO-Numeric	fips	Country	Capital	Area(in sq km)	Population	Continent	tld	CurrencyCode	CurrencyName	Phone	Postal Code Format	Postal Code Regex	Languages	geonameid	neighbours	EquivalentFipsCode".encode(),
+        u"AD	INVALID_ISO3	020	AN	Andorra	Andorra la Vella	468	84000	EU	.ad	EUR	Euro	376	AD###	^(?:AD)*(\d{3})$	ca	3041565	ES,FR	".encode()
+    ]
+
+    def setUp(self):
+        Country.objects.all().delete()
+
+    def tearDown(self):
+        Country.objects.all().delete()
+
+    def test_valid_data(self):
+        parse_geonames_data(iter(self.valid_data))
+        self.assertEqual(Country.objects.count(), 1)
+
+    def test_invalid_data_no_header(self):
+        with self.assertRaises(GeonamesParseError):
+            parse_geonames_data(iter(self.invalid_data_no_header))
+
+    def test_invalid_data_bad_header(self):
+        with self.assertRaises(GeonamesParseError):
+            parse_geonames_data(iter(self.invalid_data_bad_header))
+
+    def test_invalid_data_field_length(self):
+        with self.assertRaises(GeonamesParseError):
+            parse_geonames_data(iter(self.invalid_data_invalid_field_length))
+
+    def test_invalid_data_field_length_update(self):
+        parse_geonames_data(iter(self.valid_data))
+        with self.assertRaises(GeonamesParseError):
+            parse_geonames_data(iter(self.invalid_data_invalid_field_length))
+
+
+class TestUpdateCountriesPlusCommand(TestCase):
+    def setUp(self):
+        Country.objects.all().delete()
+
+    def tearDown(self):
+        Country.objects.all().delete()
+
+    def test_update_countries_plus_command(self):
+        # If the geonames.org dataset adds/removes a country or changes its format this
+        # test will fail, which is intended.
+
+        call_command('update_countries_plus')
+        self.assertEqual(Country.objects.count(), 252)
+
+
+class TestCountryModel(TestCase):
+    valid_values = {
+        'postal_code_regex': 'test', 'geonameid': 1149361,
+        'languages': 'fa-AF,ps,uz-AF,tk', 'equivalent_fips_code': '2134',
+        'population': 29121286, 'name': 'Afghanistan', 'area': Decimal('647500.0'),
+        'postal_code_format': None, 'capital': 'Kabul', 'fips': 'AF', 'iso3': 'AFG',
+        'currency_symbol': '?', 'currency_name': 'Afghani',
+        'neighbours': 'TM,CN,IR,TJ,PK,UZ', 'iso_numeric': 4, 'continent': 'AS',
+        'tld': '.af', 'iso': 'AF', 'phone': '9342342 and 4293432434', 'currency_code': 'AFN'
+    }
+
+    def setUp(self):
+        Country.objects.all().delete()
+
+    def tearDown(self):
+        Country.objects.all().delete()
+
+    def test_country_validation_valid(self):
+        self.assertIsInstance(Country.objects.create(**self.valid_values), Country)
+
+    def test_country_validation_invalid(self):
+        invalid_values = deepcopy(self.valid_values)
+        invalid_values['iso'] = "This is too long for the iso field"
+        with self.assertRaises(ValidationError):
+            Country.objects.create(**invalid_values)

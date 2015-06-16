@@ -1,6 +1,7 @@
 # coding=utf-8
-from django.core.exceptions import ObjectDoesNotExist
+import re
 
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 import requests
 import six
 
@@ -198,57 +199,79 @@ CURRENCY_SYMBOLS = {
 
 class GeonamesParseError(Exception):
     def __init__(self, message=None):
-        # Call the base class constructor with the parameters it needs
-        if not message:
-            message = "I couldn't parse the Geonames file (http://download.geonames.org/export/dump/countryInfo.txt).  The format may have changed. An updated version of this software may be required, please check for updates and/or raise an issue on github."
+        message = "I couldn't parse the Geonames file (http://download.geonames.org/export/dump/countryInfo.txt).  " \
+                  "The format may have changed. An updated version of this software may be required, " \
+                  "please check for updates and/or raise an issue on github.  Specific error: %s" % message
         super(GeonamesParseError, self).__init__(message)
 
 
 def update_geonames_data():
     """
-    Parses the countries table from geonames.org, updating or adding records as needed.
-    currency_symbol is not part of the countries table and is supplemented using the data
-    obtained from the link provided in the countries table.
+    Requests the countries table from geonames.org, and then calls parse_geonames_data to parse it.
     :return: num_updated, num_created
     :raise GeonamesParseError:
     """
     r = requests.get('http://download.geonames.org/export/dump/countryInfo.txt', stream=True)
+    return parse_geonames_data(r.iter_lines())
+
+
+def parse_geonames_data(lines_iterator):
+    """
+    Parses countries table data from geonames.org, updating or adding records as needed.
+    currency_symbol is not part of the countries table and is supplemented using the data
+    obtained from the link provided in the countries table.
+    :type lines_iterator: collections.iterable
+    :return: num_updated: int, num_created: int
+    :raise GeonamesParseError:
+    """
     data_headers = []
     num_created = 0
     num_updated = 0
-    for line in r.iter_lines():
+    for line in lines_iterator:
         line = line.decode()
         if line[0] == "#":
             if line[0:4] == "#ISO":
                 data_headers = line.strip('# ').split('\t')
                 if data_headers != DATA_HEADERS_ORDERED:
-                    raise GeonamesParseError
+                    raise GeonamesParseError("The table headers do not match the expected headers.")
             continue
         if not data_headers:
-            raise GeonamesParseError
+            raise GeonamesParseError("No table headers found.")
         bits = line.split('\t')
 
         data = {DATA_HEADERS_MAP[DATA_HEADERS_ORDERED[x]]: bits[x] for x in range(0, len(bits))}
-        if data['currency_code']:
+        if 'currency_code' in data and data['currency_code']:
             data['currency_symbol'] = CURRENCY_SYMBOLS.get(data['currency_code'])
 
+        # Remove empty items
         clean_data = {x: y for x, y in data.items() if y}
+
+        # Puerto Rico and the Dominican Republic have two phone prefixes in the format "123 and 456"
+        if 'phone' in clean_data:
+            if 'and' in clean_data['phone']:
+                clean_data['phone'] = ",".join(re.split('\s*and\s*', clean_data['phone']))
 
         # Avoiding update_or_create to maintain compatibility with Django 1.5
         try:
             country = Country.objects.get(iso=clean_data['iso'])
             created = False
         except ObjectDoesNotExist:
-            country = Country.objects.create(**clean_data)
+            try:
+                country = Country.objects.create(**clean_data)
+            except ValidationError as e:
+                raise GeonamesParseError("Unexpected field length: %s" % e.message_dict)
             created = True
+
         for k, v in six.iteritems(clean_data):
             setattr(country, k, v)
 
-        country.save()
+        try:
+            country.save()
+        except ValidationError as e:
+            raise GeonamesParseError("Unexpected field length: %s" % e.message_dict)
 
         if created:
             num_created += 1
         else:
             num_updated += 1
     return num_updated, num_created
-
