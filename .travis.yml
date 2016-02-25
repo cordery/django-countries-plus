@@ -25,6 +25,8 @@ matrix:
       env: DJANGO=django==1.7
     - python: "3.4"
       env: DJANGO=django==1.7
+    - python: "3.5"
+      env: DJANGO=django==1.7
     - python: "pypy"
       env: DJANGO=django==1.7
     # Django 1.8: "Python 2.7 or above"
@@ -32,8 +34,19 @@ matrix:
       env: DJANGO=django==1.8
     - python: "3.4"
       env: DJANGO=django==1.8
+    - python: "3.5"
+      env: DJANGO=django==1.8
     - python: "pypy"
       env: DJANGO=django==1.8
+     # Django 1.9: "Python 2.7 or above"
+    - python: "2.7"
+      env: DJANGO=django==1.9
+    - python: "3.4"
+      env: DJANGO=django==1.9
+    - python: "3.5"
+      env: DJANGO=django==1.9
+    - python: "pypy"
+      env: DJANGO=django==1.9
 before_install:
   - pip install coverage codecov
 install:
