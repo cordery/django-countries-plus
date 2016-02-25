@@ -40,7 +40,7 @@ class Country(models.Model):
     fips = models.CharField(max_length=3, blank=True, null=True)
     name = models.CharField(max_length=255, unique=True)
     capital = models.CharField(max_length=255, blank=True, null=True)
-    area = models.DecimalField(max_digits=9, decimal_places=1, blank=True, null=True)
+    area = models.DecimalField(max_digits=11, decimal_places=2, blank=True, null=True)
     population = models.IntegerField(blank=True, null=True)
     continent = models.CharField(max_length=2, blank=True, null=True)
     tld = models.CharField(max_length=255, blank=True, null=True)
