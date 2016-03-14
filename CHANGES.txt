@@ -1,3 +1,4 @@
+v1.1 14/03/16 -- Fixed Geonames.org file format error
 v1.0.1 16/06/15 -- Fixed update_countries_plus command for python 3, loosened model restrictions, improved test coverage.
 v1.0.0 11/06/15 -- Added feature to update data from geonames.org.  General code cleanup & improved test coverage.
 v0.3.3, 27/01/15 -- Now uses Django 1.7 data migration pattern

@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-countries-plus',
-    version='1.0.1',
+    version='1.1',
     author='Andrew Cordery',
     author_email='cordery@gmail.com',
     packages=find_packages(),
-    url='http://pypi.python.org/pypi/django-countries-plus/',
+    url='https://github.com/cordery/django-countries-plus',
     zip_safe=False,
     include_package_data=True,
     license='LICENSE.txt',
