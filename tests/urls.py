@@ -1,7 +1,7 @@
 try:
     from django.conf.urls import url
 except ImportError:
-    from django.conf.urls import patterns, url, include
+    from django.conf.urls import url
 from django.views.generic import TemplateView
 
 urlpatterns = [

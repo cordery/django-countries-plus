@@ -1,97 +1,26 @@
-# python setup.py test
-#   or
-# python runtests.py
+#!/usr/bin/env python
+# -*- coding: utf-8
+from __future__ import unicode_literals, absolute_import
+
 import os
 import sys
 
-from django import VERSION as django_version
+import django
 from django.conf import settings
-
-APP = 'countries_plus'
-TEST_APP = APP + '.tests'
-ADMIN = 'django.contrib.admin'
-if django_version >= (1, 7):
-    ADMIN = 'django.contrib.admin.apps.SimpleAdminConfig'
-
-settings.configure(
-    DEBUG=True,
-    DATABASES={
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(os.path.dirname(__file__), 'test.db'),
-            'TEST_NAME': os.path.join(os.path.dirname(__file__), 'test.db'),
-        }
-    },
-    ROOT_URLCONF=TEST_APP + '.urls',
-    INSTALLED_APPS=(
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.sessions',
-        ADMIN,
-        APP,
-        TEST_APP,
-    ),
-    MIDDLEWARE_CLASSES=(
-        'django.middleware.common.CommonMiddleware',
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'countries_plus.middleware.AddRequestCountryMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-    ),
-    TEMPLATES=[
-        # Django 1.8 starter-project template settings
-        # (needed for test_admin)
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [
-                # insert your TEMPLATE_DIRS here
-            ],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'countries_plus.context_processors.add_request_country',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.i18n',
-                    'django.template.context_processors.media',
-                    'django.template.context_processors.static',
-                    'django.template.context_processors.tz',
-                    'django.contrib.messages.context_processors.messages',
-                ],
-            },
-        },
-    ],
-    # For Django <1.8
-    TEMPLATE_CONTEXT_PROCESSORS=('countries_plus.context_processors.add_request_country',
-                                 "django.contrib.auth.context_processors.auth",
-                                 "django.core.context_processors.debug",
-                                 "django.core.context_processors.i18n",
-                                 "django.core.context_processors.media",
-                                 "django.core.context_processors.static",
-                                 "django.core.context_processors.tz",
-                                 "django.contrib.messages.context_processors.messages"),
-    # countries_plus settings
-    COUNTRIES_PLUS_COUNTRY_HEADER='GEOIP_HEADER',
-    COUNTRIES_PLUS_DEFAULT_ISO='US',
-)
-
-# Django 1.7+ initialize app registry
-if django_version[1] >= 7:
-    from django import setup
-
-    setup()
-
-try:
-    from django.test.runner import DiscoverRunner as TestRunner  # Django 1.6+
-except ImportError:
-    from django.test.simple import DjangoTestSuiteRunner as TestRunner  # Django -1.5
+from django.test.utils import get_runner
 
 
-def runtests():
-    test_runner = TestRunner(verbosity=1)
-    failures = test_runner.run_tests([APP])
-    sys.exit(failures)
+def run_tests(*test_args):
+    if not test_args:
+        test_args = ['tests']
+
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
+    django.setup()
+    TestRunner = get_runner(settings)
+    test_runner = TestRunner()
+    failures = test_runner.run_tests(test_args)
+    sys.exit(bool(failures))
 
 
 if __name__ == '__main__':
-    runtests()
+    run_tests(*sys.argv[1:])

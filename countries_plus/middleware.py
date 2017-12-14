@@ -1,10 +1,13 @@
 import logging
-from countries_plus.models import Country
+
+from django.utils.deprecation import MiddlewareMixin
+
+from .models import Country
 
 logger = logging.getLogger(__name__)
 
 
-class AddRequestCountryMiddleware(object):
+class AddRequestCountryMiddleware(MiddlewareMixin):
     def process_request(self, request):
         country = Country.get_by_request(request)
         if country:

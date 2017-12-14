@@ -1,6 +1,6 @@
-from countries_plus.utils import update_geonames_data
-
 from django.core.management.base import BaseCommand
+
+from countries_plus.utils import update_geonames_data
 
 
 class Command(BaseCommand):

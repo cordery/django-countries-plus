@@ -1,9 +1,9 @@
 import logging
 
+import six
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-import six
 
 logger = logging.getLogger(__name__)
 
@@ -65,10 +65,14 @@ class Country(models.Model):
         try:
             header_name = settings.COUNTRIES_PLUS_COUNTRY_HEADER
         except AttributeError:
-            raise AttributeError("COUNTRIES_PLUS_COUNTRY_HEADER setting missing.  This setting must be present when using the countries_plus middleware.")
+            raise AttributeError(
+                "COUNTRIES_PLUS_COUNTRY_HEADER setting missing.  This setting must be present "
+                "when using the countries_plus middleware.")
 
         if not settings.COUNTRIES_PLUS_COUNTRY_HEADER:
-            raise AttributeError("COUNTRIES_PLUS_COUNTRY_HEADER can not be empty.   This setting must be present when using the countries_plus middleware.")
+            raise AttributeError(
+                "COUNTRIES_PLUS_COUNTRY_HEADER can not be empty.   This setting must be present "
+                "when using the countries_plus middleware.")
 
         try:
             default_iso = settings.COUNTRIES_PLUS_DEFAULT_ISO.upper()
@@ -83,13 +87,19 @@ class Country(models.Model):
                 pass
 
         if not country:
-            logger.warning("countries_plus:  Could not find a country matching '%s' from provided meta header '%s'." % (geoip_request_iso, header_name))
+            logger.warning(
+                "countries_plus:  Could not find a country matching '%s' from provided meta "
+                "header '%s'." % (
+                    geoip_request_iso, header_name))
             if default_iso:
-                logger.warning("countries_plus:  Setting country to provided default '%s'." % default_iso)
+                logger.warning(
+                    "countries_plus:  Setting country to provided default '%s'." % default_iso)
                 try:
                     country = Country.objects.get(iso=default_iso)
                 except ObjectDoesNotExist:
-                    logger.warning("countries_plus:  Could not find a country matching COUNTRIES_PLUS_DEFAULT_ISO of '%s'." % default_iso)
+                    logger.warning(
+                        "countries_plus:  Could not find a country matching "
+                        "COUNTRIES_PLUS_DEFAULT_ISO of '%s'." % default_iso)
         return country
 
     def __str__(self):

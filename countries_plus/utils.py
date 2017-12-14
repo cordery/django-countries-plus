@@ -1,11 +1,11 @@
 # coding=utf-8
 import re
 
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
 import requests
 import six
+from django.core.exceptions import ValidationError
 
-from countries_plus.models import Country
+from .models import Country
 
 DATA_HEADERS_ORDERED = [
     'ISO', 'ISO3', 'ISO-Numeric', 'fips', 'Country', 'Capital', 'Area(in sq km)',
@@ -199,9 +199,12 @@ CURRENCY_SYMBOLS = {
 
 class GeonamesParseError(Exception):
     def __init__(self, message=None):
-        message = "I couldn't parse the Geonames file (http://download.geonames.org/export/dump/countryInfo.txt).  " \
-                  "The format may have changed. An updated version of this software may be required, " \
-                  "please check for updates and/or raise an issue on github.  Specific error: %s" % message
+        message = "I couldn't parse the Geonames file (" \
+                  "http://download.geonames.org/export/dump/countryInfo.txt).  " \
+                  "The format may have changed. An updated version of this software may be " \
+                  "required, " \
+                  "please check for updates and/or raise an issue on github.  Specific error: " \
+                  "%s" % message
         super(GeonamesParseError, self).__init__(message)
 
 
@@ -233,7 +236,8 @@ def parse_geonames_data(lines_iterator):
             if line[0:4] == "#ISO":
                 data_headers = line.strip('# ').split('\t')
                 if data_headers != DATA_HEADERS_ORDERED:
-                    raise GeonamesParseError("The table headers do not match the expected headers.")
+                    raise GeonamesParseError(
+                        "The table headers do not match the expected headers.")
             continue
         if not data_headers:
             raise GeonamesParseError("No table headers found.")
@@ -246,7 +250,8 @@ def parse_geonames_data(lines_iterator):
         # Remove empty items
         clean_data = {x: y for x, y in data.items() if y}
 
-        # Puerto Rico and the Dominican Republic have two phone prefixes in the format "123 and 456"
+        # Puerto Rico and the Dominican Republic have two phone prefixes in the format "123 and
+        # 456"
         if 'phone' in clean_data:
             if 'and' in clean_data['phone']:
                 clean_data['phone'] = ",".join(re.split('\s*and\s*', clean_data['phone']))
@@ -255,7 +260,7 @@ def parse_geonames_data(lines_iterator):
         try:
             country = Country.objects.get(iso=clean_data['iso'])
             created = False
-        except ObjectDoesNotExist:
+        except Country.DoesNotExist:
             try:
                 country = Country.objects.create(**clean_data)
             except ValidationError as e:

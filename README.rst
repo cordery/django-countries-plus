@@ -1,25 +1,51 @@
-=====================
-django-countries-plus
-=====================
+=============================
+Django Languages Plus
+=============================
 
-django-countries-plus provides a model and fixture containing all top level country data from Geonames.org (http://download.geonames.org/export/dump/countryInfo.txt)
+.. image:: https://badge.fury.io/py/django-countries-plus.svg
+    :target: https://badge.fury.io/py/django-countries-plus
 
-This package also provides a convenience middleware that will look up a country in the database using a defined meta header, ex:  the Cloudflare provided geoip META header HTTP_CF_IPCOUNTRY.  This country object will be
-attached to the request object at request.country
-
-
-Badges
-------
-
-.. image:: https://travis-ci.org/cordery/django-countries-plus.svg
+.. image:: https://travis-ci.org/cordery/django-countries-plus.svg?branch=master
     :target: https://travis-ci.org/cordery/django-countries-plus
-.. image:: http://codecov.io/github/cordery/django-countries-plus/coverage.svg?branch=master
-    :target: http://codecov.io/github/cordery/django-countries-plus?branch=master
-.. image:: https://requires.io/github/cordery/django-countries-plus/requirements.svg?branch=master
-    :target: https://requires.io/github/cordery/django-countries-plus/requirements/?branch=master
-.. image:: https://www.codacy.com/project/badge/c74f1b1041f44940b58e0e1587b10453?style=flat-square
-    :target: https://www.codacy.com/app/cordery/django-countries-plus
 
+.. image:: https://codecov.io/gh/cordery/django-countries-plus/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/cordery/django-countries-plus
+
+Your project description goes here
+
+Documentation
+-------------
+
+
+Quickstart
+----------
+
+Install Django Languages Plus::
+
+    pip install django-countries-plus
+
+Add it to your `INSTALLED_APPS`:
+
+.. code-block:: python
+
+    INSTALLED_APPS = (
+        ...
+        'countries_plus.apps.DjangoLanguagesPlusConfig',
+        ...
+    )
+
+Add Django Languages Plus's URL patterns:
+
+.. code-block:: python
+
+    from countries_plus import urls as countries_plus_urls
+
+
+    urlpatterns = [
+        ...
+        url(r'^', include(countries_plus_urls)),
+        ...
+    ]
 
 
 Country Model
@@ -67,19 +93,19 @@ Step 4: Load the Countries Data
     ``python manage.py update_countries_plus``
 2. (alternative) Load the provided fixture from the fixtures directory.
     ``python manage.py loaddata PATH_TO_COUNTRIES_PLUS/countries_plus/countries_data.json.gz``
-    
 
 
-Usage 
+
+Usage
 -----
 
 **Retrieve a Country**::
-    
+
     from countries_plus.models import Country
     usa = Country.objects.get(iso3='USA')
 
 **Update the countries data with the latest geonames.org data**::
-    
+
     python manage.py update_countries_data
 
 This management command will download the latest geonames.org countries data and convert it into Country objects.  Existing Country objects will be updated if necessary.  No Country objects will be deleted, even if that country has ceased to exist.
@@ -115,9 +141,9 @@ Python 2.7+ & 3.3+, Django 1.4+, however if you are using Django 1.7, tests will
 
 
 
-Integrating with django-languages-plus
+Integrating with django-countries-plus
 --------------------------------------
-If you also have django-languages-plus(https://pypi.python.org/pypi/django-languages-plus) installed then you can run the following command once to associate the two datasets and generate a list of culture codes (pt_BR for example)::
+If you also have django-countries-plus(https://pypi.python.org/pypi/django-countries-plus) installed then you can run the following command once to associate the two datasets and generate a list of culture codes (pt_BR for example)::
 
         from languages_plus.utils import associate_countries_and_languages
         associate_countries_and_languages()
@@ -137,3 +163,25 @@ Notes on 1.0.0
 * The get_country_by_request utility function has been moved into the Country model, and is available as Country.get_by_request(request)
 * Test coverage has been substantially improved.
 * If you have been running an earlier version you should run python manage.py update_countries_plus to update your data tables as they may contain incorrect data.
+
+Running Tests
+-------------
+
+Does the code actually work?
+
+::
+
+    source <YOURVIRTUALENV>/bin/activate
+    (myenv) $ pip install tox
+    (myenv) $ tox
+
+Credits
+-------
+
+Tools used in rendering this package:
+
+*  Cookiecutter_
+*  `cookiecutter-djangopackage`_
+
+.. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _`cookiecutter-djangopackage`: https://github.com/pydanny/cookiecutter-djangopackage
