@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.2.1] - 2017-12-13
+### Fixed
+- Fixtures dir is now properly included in pip package
+
 ## [1.2.0] - 2017-12-13
 ### Added
 - Cleaned up project & improved documentation
