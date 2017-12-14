@@ -11,45 +11,10 @@ Django Languages Plus
 .. image:: https://codecov.io/gh/cordery/django-countries-plus/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/cordery/django-countries-plus
 
-Your project description goes here
-
-Documentation
--------------
 
 
-Quickstart
-----------
-
-Install Django Languages Plus::
-
-    pip install django-countries-plus
-
-Add it to your `INSTALLED_APPS`:
-
-.. code-block:: python
-
-    INSTALLED_APPS = (
-        ...
-        'countries_plus.apps.DjangoLanguagesPlusConfig',
-        ...
-    )
-
-Add Django Languages Plus's URL patterns:
-
-.. code-block:: python
-
-    from countries_plus import urls as countries_plus_urls
-
-
-    urlpatterns = [
-        ...
-        url(r'^', include(countries_plus_urls)),
-        ...
-    ]
-
-
-Country Model
--------------
+The Country Model
+-----------------
 
 The model provides the following fields (original geonames.org column name in parentheses).
 
@@ -137,32 +102,22 @@ Add the Request Country to the Request Context
 
 Compatibility
 -------------
-Python 2.7+ & 3.3+, Django 1.4+, however if you are using Django 1.7, tests will fail unless you are using Django 1.7.2 or higher due to a bug in earlier versions.
+Python 2.7+ & 3.6+.
+Django 1.11 and Django 2.0+ supported, however should still work on Django 1.4-1.10.
+
+Note: if you are using Django 1.7, tests will fail unless you are using Django 1.7.2 or higher due to a bug in earlier versions.
 
 
 
-Integrating with django-countries-plus
+Integrating with django-languages-plus
 --------------------------------------
-If you also have django-countries-plus(https://pypi.python.org/pypi/django-countries-plus) installed then you can run the following command once to associate the two datasets and generate a list of culture codes (pt_BR for example)::
+If you also have django-languages-plus(https://pypi.python.org/pypi/django-languages-plus) installed then you can run the following command once to associate the two datasets and generate a list of culture codes (pt_BR for example)::
 
         from languages_plus.utils import associate_countries_and_languages
         associate_countries_and_languages()
 
 
-Notes on 1.0.1
---------------
-* Two countries (Dominican Republic and Puerto Rico) have two phone number prefixes instead of 1.  These prefixes are now comma separated.
-* The Country model has had all fields with undefined lengths (ex: name) expanded to max_length=255.  Defined length fields (ex: Iso, Iso3) are unchanged.
-* The Country model will no validate on save and reject values of the wrong length.  The test suite has been expanded to test this.
 
-Notes on 1.0.0
---------------
-* The data migration has been removed in favour of the new management command and manually loading the fixture.
-* The fixture is no longer named initial_data and so must be loaded manually, if desired.
-* In order to provide better compatibility with the way Django loads apps the Country model is no longer importable directly from countries_plus.
-* The get_country_by_request utility function has been moved into the Country model, and is available as Country.get_by_request(request)
-* Test coverage has been substantially improved.
-* If you have been running an earlier version you should run python manage.py update_countries_plus to update your data tables as they may contain incorrect data.
 
 Running Tests
 -------------

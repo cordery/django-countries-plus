@@ -21,7 +21,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved test coverage.
 
 ### Changed
-- Loosened model restrictions
+- The Country model has had all fields with undefined lengths (ex: name) expanded to max_length=255.  Defined length fields (ex: Iso, Iso3) are unchanged.
+- Two countries (Dominican Republic and Puerto Rico) have two phone number prefixes instead of 1.  These prefixes are now comma separated.
+- The Country model will now validate on save and reject values of the wrong length.  The test suite has been expanded to test this.
 
 ### Fixed
 - Fixed update_countries_plus command for python 3
@@ -29,9 +31,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.0.0] - 2015-06-11
 ### Added
 - Added feature to update data from geonames.org.  
+- Test coverage has been substantially improved.
+
+### Changed
+- The data migration has been removed in favour of the new management command and manually loading the fixture.
+- The fixture is no longer named initial_data and so must be loaded manually, if desired.
+- In order to provide better compatibility with the way Django loads apps the Country model is no longer importable directly from countries_plus.
+- The get_country_by_request utility function has been moved into the Country model, and is available as Country.get_by_request(request)
 
 ### Fixed 
 - General code cleanup & improved test coverage.
+
+### Note
+- If you have been running an earlier version you should run python manage.py update_countries_plus to update your data tables as they may contain incorrect data.
 
 ## [0.3.3] - 2015-01-27
 ### Changed
