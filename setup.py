@@ -47,8 +47,7 @@ history = open('CHANGELOG.md').read()
 setup(
     name='django-countries-plus',
     version=version,
-    description="""A django model & fixture containing all data from the countries table of 
-    Geonames.org""",
+    description="A django model & fixture containing all data from the countries table of Geonames.org",
     long_description=readme + '\n\n' + history,
     author='Andrew Cordery',
     author_email='cordery@gmail.com',
