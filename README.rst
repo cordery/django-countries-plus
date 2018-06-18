@@ -71,7 +71,7 @@ Usage
 
 **Update the countries data with the latest geonames.org data**::
 
-    python manage.py update_countries_data
+    python manage.py update_countries_plus
 
 This management command will download the latest geonames.org countries data and convert it into Country objects.  Existing Country objects will be updated if necessary.  No Country objects will be deleted, even if that country has ceased to exist.
 
