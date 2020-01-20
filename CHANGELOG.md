@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.3.0] - 2020-01-20
+### Changed
+- Updated to use poetry & pytest
+- Added tests for Django 3
+- Dropped explicit support for Django <=1.10, may still work fine though.
+
 ## [1.2.1] - 2017-12-13
 ### Fixed
 - Fixtures dir is now properly included in pip package

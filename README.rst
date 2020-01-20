@@ -1,20 +1,31 @@
 =============================
-Django Languages Plus
+Django Countries Plus
 =============================
 
 .. image:: https://badge.fury.io/py/django-countries-plus.svg
     :target: https://badge.fury.io/py/django-countries-plus
 
-.. image:: https://travis-ci.org/cordery/django-countries-plus.svg?branch=master
+.. image:: https://travis-ci.org/cordery/django-countries-plus.svg
     :target: https://travis-ci.org/cordery/django-countries-plus
 
-.. image:: https://codecov.io/gh/cordery/django-countries-plus/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/cordery/django-countries-plus
+.. image:: https://codecov.io/github/cordery/django-countries-plus/coverage.svg
+    :target: https://codecov.io/github/cordery/django-countries-plus
+
+.. image:: https://requires.io/github/cordery/django-countries-plus/requirements.svg?branch=master
+    :target: https://requires.io/github/cordery/django-countries-plus/requirements/?branch=master
+
+.. image:: https://www.codacy.com/project/badge/c74f1b1041f44940b58e0e1587b10453?style=flat-square
+    :target: https://www.codacy.com/app/cordery/django-countries-plus
+
+django-countries-plus provides a model and fixture containing all top level country data from Geonames.org (http://download.geonames.org/export/dump/countryInfo.txt)
+
+This package also provides a convenience middleware that will look up a country in the database using a defined meta header, ex:  the Cloudflare provided geoip META header HTTP_CF_IPCOUNTRY.  This country object will be
+attached to the request object at request.country.
 
 
 
-The Country Model
------------------
+Country Model
+-------------
 
 The model provides the following fields (original geonames.org column name in parentheses).
 
@@ -48,16 +59,15 @@ Step 1: Install From PyPi
 
 ``pip install django-countries-plus``
 
-Step 2: Add ``countries_plus`` to your INSTALLED_APPS
+Step 2: Add ``countries_plus`` to your settings INSTALLED_APPS
 
-Step 3: Run ``python manage.py sync`` (Django <1.7) or ``python manage.py migrate`` (Django 1.7+)
+Step 3: Run ``python manage.py migrate``
 
 Step 4: Load the Countries Data
-
-1. Load the countries data into your database with the update_countries_plus management command.
-    ``python manage.py update_countries_plus``
-2. (alternative) Load the provided fixture from the fixtures directory.
-    ``python manage.py loaddata PATH_TO_COUNTRIES_PLUS/countries_plus/countries_data.json.gz``
+    a. Load the countries data into your database with the update_countries_plus management command.
+        ``python manage.py update_countries_plus``
+    b. (alternative) Load the provided fixture from the fixtures directory.
+        ``python manage.py loaddata PATH_TO_COUNTRIES_PLUS/countries_plus/countries_data.json.gz``
 
 
 
@@ -90,23 +100,21 @@ Add the Request Country to each Request
     Example::
 
         COUNTRIES_PLUS_COUNTRY_HEADER = 'HTTP_CF_COUNTRY'
-        COUNTIRES_PLUS_DEFAULT_ISO = 'US'
+        COUNTRIES_PLUS_DEFAULT_ISO = 'US'
 
 
 Add the Request Country to the Request Context
 ----------------------------------------------
 1. Enable the optional middleware as described above
 
-2. Add ``countries_plus.context_processors.add_request_country`` to your template TEMPLATE_CONTEXT_PROCESSORS setting (Django <1.8) or to your 'context_processors' option in the OPTIONS of a DjangoTemplates backend instead (Django 1.8)
+2. Add ``countries_plus.context_processors.add_request_country`` to your 'context_processors' option in the OPTIONS of a DjangoTemplates backend instead (Django 1.8)
 
 
-Compatibility
--------------
-Python 2.7+ & 3.6+.
-Django 1.11 and Django 2.0+ supported, however should still work on Django 1.4-1.10.
-
-Note: if you are using Django 1.7, tests will fail unless you are using Django 1.7.2 or higher due to a bug in earlier versions.
-
+---------------------------------------
+Requirements
+---------------------------------------
+Python: 2.7 or 3.*
+Django:  Tested against the latest versions of 1.11, 2, and 3.
 
 
 Integrating with django-languages-plus
@@ -117,6 +125,21 @@ If you also have django-languages-plus(https://pypi.python.org/pypi/django-langu
         associate_countries_and_languages()
 
 
+Notes on 1.0.1
+--------------
+* Two countries (Dominican Republic and Puerto Rico) have two phone number prefixes instead of 1.  These prefixes are now comma separated.
+* The Country model has had all fields with undefined lengths (ex: name) expanded to max_length=255.  Defined length fields (ex: Iso, Iso3) are unchanged.
+* The Country model will no validate on save and reject values of the wrong length.  The test suite has been expanded to test this.
+
+Notes on 1.0.0
+--------------
+* The data migration has been removed in favour of the new management command and manually loading the fixture.
+* The fixture is no longer named initial_data and so must be loaded manually, if desired.
+* In order to provide better compatibility with the way Django loads apps the Country model is no longer importable directly from countries_plus.
+* The get_country_by_request utility function has been moved into the Country model, and is available as Country.get_by_request(request)
+* Test coverage has been substantially improved.
+* If you have been running an earlier version you should run python manage.py update_countries_plus to update your data tables as they may contain incorrect data.
+
 
 
 Running Tests
@@ -126,17 +149,14 @@ Does the code actually work?
 
 ::
 
-    source <YOURVIRTUALENV>/bin/activate
-    (myenv) $ pip install tox
-    (myenv) $ tox
+    $ poetry install
+    $ poetry run pytest
 
-Credits
--------
+Or for the full tox suite:
 
-Tools used in rendering this package:
+::
 
-*  Cookiecutter_
-*  `cookiecutter-djangopackage`_
+    $ poetry install
+    $ pip install tox
+    $ tox
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`cookiecutter-djangopackage`: https://github.com/pydanny/cookiecutter-djangopackage

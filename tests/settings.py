@@ -5,8 +5,6 @@ import os
 
 import django
 
-ROOT_DIR = os.path.dirname(__file__)
-
 DEBUG = True
 USE_TZ = True
 
@@ -29,30 +27,23 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
+MIDDLEWARE = ()
+
+ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
+PROJECT_DIR = os.path.join(ROOT_DIR, 'tests')
 ROOT_URLCONF = 'tests.urls'
+MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
+MEDIA_URL = '/media/'
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
+STATIC_ROOT = os.path.join(ROOT_DIR, 'staticfiles')
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
+STATIC_URL = '/static/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(ROOT_DIR, 'templates')],
         'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'countries_plus.context_processors.add_request_country',
-                'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.debug',
-                'django.template.context_processors.i18n',
-                'django.template.context_processors.media',
-                'django.template.context_processors.static',
-                'django.template.context_processors.tz',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        }
-    },
+        'DIRS': [os.path.join(PROJECT_DIR, 'templates')]
+    }
 ]
-if django.VERSION >= (1, 10):
-    MIDDLEWARE = ('countries_plus.middleware.AddRequestCountryMiddleware',)
-else:
-    MIDDLEWARE_CLASSES = ('countries_plus.middleware.AddRequestCountryMiddleware',)
-
-COUNTRIES_PLUS_COUNTRY_HEADER = 'GEOIP_HEADER'
-COUNTRIES_PLUS_DEFAULT_ISO = 'US'

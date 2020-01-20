@@ -254,7 +254,7 @@ def parse_geonames_data(lines_iterator):
         # 456"
         if 'phone' in clean_data:
             if 'and' in clean_data['phone']:
-                clean_data['phone'] = ",".join(re.split('\s*and\s*', clean_data['phone']))
+                clean_data['phone'] = ",".join(re.split(r'\s*and\s*', clean_data['phone']))
 
         # Avoiding update_or_create to maintain compatibility with Django 1.5
         try:
