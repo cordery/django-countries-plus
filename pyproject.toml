@@ -31,7 +31,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "*"
 django = [
-    {version = "<=1.11", python = "^2.7"},
+    {version = "<2", python = "^2.7"},
     {version = ">=2", python = "^3.6"}
 ]
 six = "*"
