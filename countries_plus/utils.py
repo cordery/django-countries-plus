@@ -232,6 +232,8 @@ def parse_geonames_data(lines_iterator):
     num_updated = 0
     for line in lines_iterator:
         line = line.decode()
+        if len(line) == 0:
+            continue
         if line[0] == "#":
             if line[0:4] == "#ISO":
                 data_headers = line.strip('# ').split('\t')
