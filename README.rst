@@ -113,8 +113,8 @@ Add the Request Country to the Request Context
 ---------------------------------------
 Requirements
 ---------------------------------------
-Python: 2.7 or 3.*
-Django:  Tested against the latest versions of 1.11, 2, and 3.
+Python: 3.7+
+Django:  Tested against the LTS or latest versions of 2.2, 3, and 4.
 
 
 Integrating with django-languages-plus

@@ -2,7 +2,6 @@
 import re
 
 import requests
-import six
 from django.core.exceptions import ValidationError
 
 from .models import Country
@@ -269,7 +268,7 @@ def parse_geonames_data(lines_iterator):
                 raise GeonamesParseError("Unexpected field length: %s" % e.message_dict)
             created = True
 
-        for k, v in six.iteritems(clean_data):
+        for k, v in clean_data.items():
             setattr(country, k, v)
 
         try:

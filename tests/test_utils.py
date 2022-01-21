@@ -1,7 +1,7 @@
 import pytest
 
 from countries_plus.models import Country
-from countries_plus.utils import parse_geonames_data, GeonamesParseError, update_geonames_data
+from countries_plus.utils import GeonamesParseError, parse_geonames_data, update_geonames_data
 
 
 @pytest.mark.django_db
