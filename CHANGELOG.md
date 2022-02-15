@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Replaced deprecated ugettext with gettext, supported in Django 2.2, 3, & 4, thanks to @niSeRdiSeR
+
 ## [2.0.0]
 ### Changed
 - Dropped support for Python 2 and Django 1
