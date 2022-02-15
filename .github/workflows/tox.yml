@@ -30,7 +30,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.local  # the path depends on the OS
-          key: poetry-0  # increment to reset cache
+          key: poetry-0-${{ matrix.python-version }}  # increment to reset cache
       - name: Install Poetry
         uses: snok/install-poetry@v1
         with:
