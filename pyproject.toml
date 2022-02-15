@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.rst"
 include = ["LICENSE", "*.rst", "*.md"]
 packages = [
-    {include = "countries_plus"}
+    { include = "countries_plus" }
 ]
 homepage = "https://github.com/cordery/django-countries-plus"
 repository = "https://github.com/cordery/django-countries-plus"
@@ -25,9 +25,10 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.7"
+python = ">=3.7,<4"
 django = ">=2.2"
 requests = "^2"
+urllib3 = { version = "^1.26", python = "^3.10" }
 
 [tool.poetry.dev-dependencies]
 coverage = "^6.3"
@@ -37,7 +38,7 @@ pytest-cov = "^3"
 pytest-django = "^4.5"
 tox = "^3.24"
 bump2version = "^1.0.1"
-tox-gh-actions = "^2.9.1"
+tox-poetry-installer = {extras = ["poetry"], version = "^0.8.3"}
 
 
 [build-system]

@@ -1,3 +1,7 @@
+import django
+
 APP_NAME = 'countries_plus'
-default_app_config = 'countries_plus.apps.DefaultConfig'
 __version__ = '2.0.0'
+
+if django.VERSION[0] == 2:
+    default_app_config = 'countries_plus.apps.DefaultConfig'
