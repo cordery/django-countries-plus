@@ -37,6 +37,7 @@ pytest-cov = "^3"
 pytest-django = "^4.5"
 tox = "^3.24"
 bump2version = "^1.0.1"
+tox-gh-actions = "^2.9.1"
 
 
 [build-system]
