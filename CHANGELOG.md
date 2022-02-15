@@ -5,7 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [2.0.1]
+### Fixed
 - Replaced deprecated ugettext with gettext, supported in Django 2.2, 3, & 4, thanks to @niSeRdiSeR
+- Updated tox config
+- Django 4, python 3.10 test added to matrix
 
 ## [2.0.0]
 ### Changed
