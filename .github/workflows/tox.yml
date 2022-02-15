@@ -63,6 +63,7 @@ jobs:
       - name: Install django ${{ matrix.django-version }}
         run: |
           source .venv/bin/activate
+          pip install -U pip setuptools
           pip install "Django${{ matrix.django-version }}"
       - name: Run tests
         run: |
