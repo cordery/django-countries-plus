@@ -10,13 +10,26 @@ from countries_plus.models import Country
 @pytest.mark.django_db
 class TestCountryModel:
     valid_values = {
-        'postal_code_regex': 'test', 'geonameid': 1149361,
-        'languages': 'fa-AF,ps,uz-AF,tk', 'equivalent_fips_code': '2134',
-        'population': 29121286, 'name': 'Afghanistan', 'area': Decimal('647500.0'),
-        'postal_code_format': None, 'capital': 'Kabul', 'fips': 'AF', 'iso3': 'AFG',
-        'currency_symbol': '?', 'currency_name': 'Afghani',
-        'neighbours': 'TM,CN,IR,TJ,PK,UZ', 'iso_numeric': 4, 'continent': 'AS',
-        'tld': '.af', 'iso': 'AF', 'phone': '9342342 and 4293432434', 'currency_code': 'AFN'
+        'postal_code_regex': 'test',
+        'geonameid': 1149361,
+        'languages': 'fa-AF,ps,uz-AF,tk',
+        'equivalent_fips_code': '2134',
+        'population': 29121286,
+        'name': 'Afghanistan',
+        'area': Decimal('647500.0'),
+        'postal_code_format': None,
+        'capital': 'Kabul',
+        'fips': 'AF',
+        'iso3': 'AFG',
+        'currency_symbol': '?',
+        'currency_name': 'Afghani',
+        'neighbours': 'TM,CN,IR,TJ,PK,UZ',
+        'iso_numeric': 4,
+        'continent': 'AS',
+        'tld': '.af',
+        'iso': 'AF',
+        'phone': '9342342 and 4293432434',
+        'currency_code': 'AFN',
     }
 
     def test_country_validation_valid(self):
@@ -31,7 +44,6 @@ class TestCountryModel:
 
 @pytest.mark.django_db
 class TestCountryGetByRequest:
-
     @pytest.fixture
     def request_without_geoip(self, rf):
         request = rf.get('/')
@@ -39,10 +51,10 @@ class TestCountryGetByRequest:
         return request
 
     @pytest.fixture
-    def request_with_geoip(self, rf):
+    def request_with_geoip(self, rf, other_country):
         request = rf.get('/')
         request.META = {
-            'GEOIP_HEADER': 'TC',
+            'GEOIP_HEADER': other_country.iso,
         }
         return request
 
@@ -59,9 +71,14 @@ class TestCountryGetByRequest:
         settings.COUNTRIES_PLUS_DEFAULT_ISO = ''
         assert Country.get_by_request(request_without_geoip) is None
 
-    def test_default(self, settings, default_country, other_country, request_without_geoip, request_with_geoip):
+    def test_default(
+        self,
+        countries_plus_settings,
+        default_country,
+        other_country,
+        request_without_geoip,
+        request_with_geoip,
+    ):
         # Test with a default
-        settings.COUNTRIES_PLUS_COUNTRY_HEADER = 'GEOIP_HEADER'
-        settings.COUNTRIES_PLUS_DEFAULT_ISO = 'US'
         assert Country.get_by_request(request_without_geoip) == default_country
         assert Country.get_by_request(request_with_geoip) == other_country

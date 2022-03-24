@@ -1,3 +1,3 @@
-# requires countries_plus middleware
 def add_request_country(request):
-    return {'country': request.country}
+    """Add 'country' to the request context.  Requires countries_plus middleware."""
+    return {'country': getattr(request, 'country', None)}

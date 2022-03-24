@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-### Changed
-- Added Black formatting
-- General repo cleanup
+## [2.1.0]
+### Added
+- Added search_fields to CountryAdmin, thanks DanyPM
 ## [2.0.1]
 ### Fixed
 - Replaced deprecated ugettext with gettext, supported in Django 2.2, 3, & 4, thanks to @niSeRdiSeR

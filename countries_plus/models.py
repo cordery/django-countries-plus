@@ -50,7 +50,7 @@ class Country(models.Model):
                 "when using the countries_plus middleware."
             )
 
-        if not settings.COUNTRIES_PLUS_COUNTRY_HEADER:
+        if not header_name:
             raise AttributeError(
                 "COUNTRIES_PLUS_COUNTRY_HEADER can not be empty.   This setting must be present "
                 "when using the countries_plus middleware."
