@@ -5,8 +5,7 @@ from countries_plus.models import Country
 logger = logging.getLogger(__name__)
 
 
-class AddRequestCountryMiddleware(object):
-
+class AddRequestCountryMiddleware:
     def __init__(self, get_response=None):
         self.get_response = get_response
 
@@ -15,5 +14,7 @@ class AddRequestCountryMiddleware(object):
         if country:
             request.country = country
         else:
-            logger.warning('countries_plus:  Could not retrieve country, not adding to request.')
+            logger.warning(
+                'countries_plus:  Could not retrieve country, not adding to request.'
+            )
         return self.get_response(request)

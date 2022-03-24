@@ -9,5 +9,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         num_updated, num_created = update_geonames_data()
         self.stdout.write(
-            "Countries Plus data has been succesfully updated from geonames.org.  "
-            "%s countries were updated, %s countries were created." % (num_updated, num_created))
+            "Countries Plus data has been successfully updated from geonames.org.  "
+            "%s countries were updated, %s countries were created."
+            % (num_updated, num_created)
+        )

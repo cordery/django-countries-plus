@@ -1,6 +1,0 @@
-include AUTHORS.rst
-include CONTRIBUTING.rst
-include CHANGELOG.md
-include LICENSE
-include README.rst
-recursive-include countries_plus *.html *.png *.gif *js *.css *jpg *jpeg *svg *py *gz

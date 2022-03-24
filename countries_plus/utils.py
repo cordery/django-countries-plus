@@ -1,5 +1,6 @@
 # coding=utf-8
 import re
+from typing import Iterable, Tuple
 
 import requests
 from django.core.exceptions import ValidationError
@@ -7,10 +8,25 @@ from django.core.exceptions import ValidationError
 from .models import Country
 
 DATA_HEADERS_ORDERED = [
-    'ISO', 'ISO3', 'ISO-Numeric', 'fips', 'Country', 'Capital', 'Area(in sq km)',
-    'Population', 'Continent', 'tld', 'CurrencyCode', 'CurrencyName', 'Phone',
-    'Postal Code Format', 'Postal Code Regex', 'Languages', 'geonameid', 'neighbours',
-    'EquivalentFipsCode'
+    'ISO',
+    'ISO3',
+    'ISO-Numeric',
+    'fips',
+    'Country',
+    'Capital',
+    'Area(in sq km)',
+    'Population',
+    'Continent',
+    'tld',
+    'CurrencyCode',
+    'CurrencyName',
+    'Phone',
+    'Postal Code Format',
+    'Postal Code Regex',
+    'Languages',
+    'geonameid',
+    'neighbours',
+    'EquivalentFipsCode',
 ]
 
 DATA_HEADERS_MAP = {
@@ -32,7 +48,7 @@ DATA_HEADERS_MAP = {
     'Languages': 'languages',
     'geonameid': 'geonameid',
     'neighbours': 'neighbours',
-    'EquivalentFipsCode': 'equivalent_fips_code'
+    'EquivalentFipsCode': 'equivalent_fips_code',
 }
 
 CURRENCY_SYMBOLS = {
@@ -192,19 +208,19 @@ CURRENCY_SYMBOLS = {
     "YER": "﷼",
     "ZAR": "R",
     "ZMK": "ZK",
-    "ZWL": "$"
+    "ZWL": "$",
 }
 
 
 class GeonamesParseError(Exception):
     def __init__(self, message=None):
-        message = "I couldn't parse the Geonames file (" \
-                  "http://download.geonames.org/export/dump/countryInfo.txt).  " \
-                  "The format may have changed. An updated version of this software may be " \
-                  "required, " \
-                  "please check for updates and/or raise an issue on github.  Specific error: " \
-                  "%s" % message
-        super(GeonamesParseError, self).__init__(message)
+        super().__init__(
+            (
+                "I couldn't parse the Geonames file (http://download.geonames.org/export/dump/countryInfo.txt).  "
+                "The format may have changed. An updated version of this software may be required, please check for "
+                f"updates and/or raise an issue on github.  Specific error: {message}"
+            )
+        )
 
 
 def update_geonames_data():
@@ -213,16 +229,19 @@ def update_geonames_data():
     :return: num_updated, num_created
     :raise GeonamesParseError:
     """
-    r = requests.get('http://download.geonames.org/export/dump/countryInfo.txt', stream=True)
+    r = requests.get(
+        'http://download.geonames.org/export/dump/countryInfo.txt', stream=True
+    )
     return parse_geonames_data(r.iter_lines())
 
 
-def parse_geonames_data(lines_iterator):
-    """
-    Parses countries table data from geonames.org, updating or adding records as needed.
-    currency_symbol is not part of the countries table and is supplemented using the data
+def parse_geonames_data(lines_iterator: Iterable) -> Tuple[int, int]:
+    """Parse countries table data from geonames.org, updating or adding records as needed.
+
+    'currency_symbol' is not part of the countries table itself and is supplemented using the data
     obtained from the link provided in the countries table.
-    :type lines_iterator: collections.iterable
+
+    :param lines_iterator: the lines to parse.
     :return: num_updated: int, num_created: int
     :raise GeonamesParseError:
     """
@@ -238,13 +257,17 @@ def parse_geonames_data(lines_iterator):
                 data_headers = line.strip('# ').split('\t')
                 if data_headers != DATA_HEADERS_ORDERED:
                     raise GeonamesParseError(
-                        "The table headers do not match the expected headers.")
+                        "The table headers do not match the expected headers."
+                    )
             continue
         if not data_headers:
             raise GeonamesParseError("No table headers found.")
         bits = line.split('\t')
 
-        data = {DATA_HEADERS_MAP[DATA_HEADERS_ORDERED[x]]: bits[x] for x in range(0, len(bits))}
+        data = {
+            DATA_HEADERS_MAP[DATA_HEADERS_ORDERED[x]]: bits[x]
+            for x in range(0, len(bits))
+        }
         if 'currency_code' in data and data['currency_code']:
             data['currency_symbol'] = CURRENCY_SYMBOLS.get(data['currency_code'])
 
@@ -255,7 +278,9 @@ def parse_geonames_data(lines_iterator):
         # 456"
         if 'phone' in clean_data:
             if 'and' in clean_data['phone']:
-                clean_data['phone'] = ",".join(re.split(r'\s*and\s*', clean_data['phone']))
+                clean_data['phone'] = ",".join(
+                    re.split(r'\s*and\s*', clean_data['phone'])
+                )
 
         # Avoiding update_or_create to maintain compatibility with Django 1.5
         try:

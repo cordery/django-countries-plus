@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'countries_plus'
+    'countries_plus',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +62,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'countries_plus.context_processors.add_request_country'
+                'countries_plus.context_processors.add_request_country',
             ],
         },
     },

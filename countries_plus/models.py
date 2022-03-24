@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import gettext as _
@@ -35,8 +36,8 @@ class Country(models.Model):
     equivalent_fips_code = models.CharField(max_length=4, blank=True, null=True)
 
     @staticmethod
-    def get_by_request(request):
-        from django.conf import settings
+    def get_by_request(request) -> 'Country':
+        """Get a Country object from `request`, via the COUNTRIES_PLUS_COUNTRY_HEADER"""
 
         country = None
         default_iso = None
@@ -46,12 +47,14 @@ class Country(models.Model):
         except AttributeError:
             raise AttributeError(
                 "COUNTRIES_PLUS_COUNTRY_HEADER setting missing.  This setting must be present "
-                "when using the countries_plus middleware.")
+                "when using the countries_plus middleware."
+            )
 
         if not settings.COUNTRIES_PLUS_COUNTRY_HEADER:
             raise AttributeError(
                 "COUNTRIES_PLUS_COUNTRY_HEADER can not be empty.   This setting must be present "
-                "when using the countries_plus middleware.")
+                "when using the countries_plus middleware."
+            )
 
         try:
             default_iso = settings.COUNTRIES_PLUS_DEFAULT_ISO.upper()
@@ -67,23 +70,25 @@ class Country(models.Model):
 
         if not country:
             logger.warning(
-                "countries_plus:  Could not find a country matching '%s' from provided meta "
-                "header '%s'." % (
-                    geoip_request_iso, header_name))
+                f"countries_plus:  Could not find a country matching '{geoip_request_iso}' from provided meta "
+                f"header '{header_name}'."
+            )
             if default_iso:
                 logger.warning(
-                    "countries_plus:  Setting country to provided default '%s'." % default_iso)
+                    f"countries_plus:  Setting country to provided default '{default_iso}'."
+                )
                 try:
                     country = Country.objects.get(iso=default_iso)
                 except ObjectDoesNotExist:
                     logger.warning(
-                        "countries_plus:  Could not find a country matching "
-                        "COUNTRIES_PLUS_DEFAULT_ISO of '%s'." % default_iso)
+                        f"countries_plus:  Could not find a country matching COUNTRIES_PLUS_DEFAULT_ISO "
+                        f"of '{default_iso}'."
+                    )
         return country
 
     def __str__(self):
-        return u'%s' % (self.name,)
+        return self.name
 
     def save(self, **kwargs):
         self.full_clean()
-        super(Country, self).save(**kwargs)
+        super().save(**kwargs)
