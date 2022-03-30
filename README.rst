@@ -141,6 +141,37 @@ Notes on 1.0.0
 * If you have been running an earlier version you should run python manage.py update_countries_plus to update your data tables as they may contain incorrect data.
 
 
+---------------------------------------
+Troubleshooting
+---------------------------------------
+
+**I get the following error when trying to run a migration adding a new ForeignKey to the Country model:**
+
+::
+
+    django.db.utils.OperationalError: (3780, "Referencing column 'new_country_id' and referenced column 'iso' in foreign key constraint 'companies_company_new_country_id_1a75fd29_fk_countries' are incompatible.")
+
+
+Due to a decision made many years ago that cannot be easily changed now,
+countries_plus uses a CharField(max_length=2) for its primary key
+(the ``iso`` column). This means that in MySQL and probably other databases the
+charset and collation of the two fields (your ForeignKey and the Country.iso) field
+must be identical.  Default collations may change over time, for example MySQL
+changed its default charset to ``utf8mb4`` and collation to ``utf8mb4_0900_ai_ci``
+in 8.0. This can cause new tables (such as ``countries_plus_country``) to be
+created with a different collation than older tables that were migrated to
+a newer version of MySQL.
+
+To solve the problem, either:
+
+- convert the ``countries_plus_country`` table to use the older collation than your related table is using.
+- or perhaps preferably, convert your related table to use the new ``utf8mb4_0900_ai_ci`` collation that the countries_plus table is using (and any other new tables in your database)
+
+For example, running the following would fix the issue by converting your related table::
+
+    ALTER TABLE <YOUR_TABLE> CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+
+
 
 Running Tests
 -------------
