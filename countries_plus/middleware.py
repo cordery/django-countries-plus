@@ -15,6 +15,6 @@ class AddRequestCountryMiddleware:
             request.country = country
         else:
             logger.warning(
-                'countries_plus:  Could not retrieve country, not adding to request.'
+                "countries_plus:  Could not retrieve country, not adding to request."
             )
         return self.get_response(request)

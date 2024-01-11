@@ -10,5 +10,5 @@ class TestUpdateCountriesPlusCommand:
         # If the geonames.org dataset adds/removes a country or changes its format this
         # test will fail, which is intended.
 
-        call_command('update_countries_plus')
+        call_command("update_countries_plus")
         assert Country.objects.count() == 252

@@ -15,9 +15,9 @@ keywords = ["django-countries-plus"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Framework :: Django",
-    "Framework :: Django :: 2.2",
-    "Framework :: Django :: 3.0",
-    "Framework :: Django :: 4.0",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
@@ -26,29 +26,26 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4"
-django = ">=2.2"
+django = ">=3.2"
 requests = "^2"
-urllib3 = { version = "^1.26", python = "^3.10" }
 
-[tool.poetry.dev-dependencies]
-coverage = "^6.3"
-codecov = "^2.1"
+[tool.poetry.group.test.dependencies]
+coverage = "^7"
 pytest = "^7"
-pytest-cov = "^3"
+pytest-cov = "^4"
 pytest-django = "^4.5"
-tox = "^3.24"
+tox = "^4"
+
+
+[tool.poetry.group.dev.dependencies]
 bump2version = "^1.0.1"
-tox-poetry-installer = { extras = ["poetry"], version = "^0.8.3" }
-black = "^22.1.0"
+ruff = "^0.1.11"
+
+
+[tool.ruff.format]
+exclude = ["**/migrations/*"]
 
 
 [build-system]
 requires = ["poetry_core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-
-[tool.black]
-line-length = 88
-target-version = ['py38']
-include = '\.pyi?$'
-skip-string-normalization = true

@@ -4,7 +4,7 @@ from countries_plus.utils import update_geonames_data
 
 
 class Command(BaseCommand):
-    help = 'Updates the Countries Plus database from geonames.org'
+    help = "Updates the Countries Plus database from geonames.org"
 
     def handle(self, *args, **options):
         num_updated, num_created = update_geonames_data()

@@ -8,47 +8,47 @@ from django.core.exceptions import ValidationError
 from .models import Country
 
 DATA_HEADERS_ORDERED = [
-    'ISO',
-    'ISO3',
-    'ISO-Numeric',
-    'fips',
-    'Country',
-    'Capital',
-    'Area(in sq km)',
-    'Population',
-    'Continent',
-    'tld',
-    'CurrencyCode',
-    'CurrencyName',
-    'Phone',
-    'Postal Code Format',
-    'Postal Code Regex',
-    'Languages',
-    'geonameid',
-    'neighbours',
-    'EquivalentFipsCode',
+    "ISO",
+    "ISO3",
+    "ISO-Numeric",
+    "fips",
+    "Country",
+    "Capital",
+    "Area(in sq km)",
+    "Population",
+    "Continent",
+    "tld",
+    "CurrencyCode",
+    "CurrencyName",
+    "Phone",
+    "Postal Code Format",
+    "Postal Code Regex",
+    "Languages",
+    "geonameid",
+    "neighbours",
+    "EquivalentFipsCode",
 ]
 
 DATA_HEADERS_MAP = {
-    'ISO': 'iso',
-    'ISO3': 'iso3',
-    'ISO-Numeric': 'iso_numeric',
-    'fips': 'fips',
-    'Country': 'name',
-    'Capital': 'capital',
-    'Area(in sq km)': 'area',
-    'Population': 'population',
-    'Continent': 'continent',
-    'tld': 'tld',
-    'CurrencyCode': 'currency_code',
-    'CurrencyName': 'currency_name',
-    'Phone': 'phone',
-    'Postal Code Format': 'postal_code_format',
-    'Postal Code Regex': 'postal_code_regex',
-    'Languages': 'languages',
-    'geonameid': 'geonameid',
-    'neighbours': 'neighbours',
-    'EquivalentFipsCode': 'equivalent_fips_code',
+    "ISO": "iso",
+    "ISO3": "iso3",
+    "ISO-Numeric": "iso_numeric",
+    "fips": "fips",
+    "Country": "name",
+    "Capital": "capital",
+    "Area(in sq km)": "area",
+    "Population": "population",
+    "Continent": "continent",
+    "tld": "tld",
+    "CurrencyCode": "currency_code",
+    "CurrencyName": "currency_name",
+    "Phone": "phone",
+    "Postal Code Format": "postal_code_format",
+    "Postal Code Regex": "postal_code_regex",
+    "Languages": "languages",
+    "geonameid": "geonameid",
+    "neighbours": "neighbours",
+    "EquivalentFipsCode": "equivalent_fips_code",
 }
 
 CURRENCY_SYMBOLS = {
@@ -230,7 +230,7 @@ def update_geonames_data():
     :raise GeonamesParseError:
     """
     r = requests.get(
-        'http://download.geonames.org/export/dump/countryInfo.txt', stream=True
+        "http://download.geonames.org/export/dump/countryInfo.txt", stream=True
     )
     return parse_geonames_data(r.iter_lines())
 
@@ -254,7 +254,7 @@ def parse_geonames_data(lines_iterator: Iterable) -> Tuple[int, int]:
             continue
         if line[0] == "#":
             if line[0:4] == "#ISO":
-                data_headers = line.strip('# ').split('\t')
+                data_headers = line.strip("# ").split("\t")
                 if data_headers != DATA_HEADERS_ORDERED:
                     raise GeonamesParseError(
                         "The table headers do not match the expected headers."
@@ -262,29 +262,29 @@ def parse_geonames_data(lines_iterator: Iterable) -> Tuple[int, int]:
             continue
         if not data_headers:
             raise GeonamesParseError("No table headers found.")
-        bits = line.split('\t')
+        bits = line.split("\t")
 
         data = {
             DATA_HEADERS_MAP[DATA_HEADERS_ORDERED[x]]: bits[x]
             for x in range(0, len(bits))
         }
-        if 'currency_code' in data and data['currency_code']:
-            data['currency_symbol'] = CURRENCY_SYMBOLS.get(data['currency_code'])
+        if "currency_code" in data and data["currency_code"]:
+            data["currency_symbol"] = CURRENCY_SYMBOLS.get(data["currency_code"])
 
         # Remove empty items
         clean_data = {x: y for x, y in data.items() if y}
 
         # Puerto Rico and the Dominican Republic have two phone prefixes in the format "123 and
         # 456"
-        if 'phone' in clean_data:
-            if 'and' in clean_data['phone']:
-                clean_data['phone'] = ",".join(
-                    re.split(r'\s*and\s*', clean_data['phone'])
+        if "phone" in clean_data:
+            if "and" in clean_data["phone"]:
+                clean_data["phone"] = ",".join(
+                    re.split(r"\s*and\s*", clean_data["phone"])
                 )
 
         # Avoiding update_or_create to maintain compatibility with Django 1.5
         try:
-            country = Country.objects.get(iso=clean_data['iso'])
+            country = Country.objects.get(iso=clean_data["iso"])
             created = False
         except Country.DoesNotExist:
             try:

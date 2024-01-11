@@ -5,17 +5,9 @@ Django Countries Plus
 .. image:: https://badge.fury.io/py/django-countries-plus.svg
     :target: https://badge.fury.io/py/django-countries-plus
 
-.. image:: https://travis-ci.org/cordery/django-countries-plus.svg
-    :target: https://travis-ci.org/cordery/django-countries-plus
+.. image:: https://github.com/cordery/django-countries-plus/actions/workflows/tox.yml/badge.svg
+    :target: https://github.com/cordery/django-countries-plus/actions/workflows/tox.yml
 
-.. image:: https://codecov.io/github/cordery/django-countries-plus/coverage.svg
-    :target: https://codecov.io/github/cordery/django-countries-plus
-
-.. image:: https://requires.io/github/cordery/django-countries-plus/requirements.svg?branch=master
-    :target: https://requires.io/github/cordery/django-countries-plus/requirements/?branch=master
-
-.. image:: https://www.codacy.com/project/badge/c74f1b1041f44940b58e0e1587b10453?style=flat-square
-    :target: https://www.codacy.com/app/cordery/django-countries-plus
 
 django-countries-plus provides a model and fixture containing all top level country data from Geonames.org (http://download.geonames.org/export/dump/countryInfo.txt)
 

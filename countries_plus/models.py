@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 
 class Country(models.Model):
     class Meta:
-        verbose_name = _('Country')
-        verbose_name_plural = _('Countries')
-        ordering = ['name']
+        verbose_name = _("Country")
+        verbose_name_plural = _("Countries")
+        ordering = ["name"]
 
     iso = models.CharField(max_length=2, primary_key=True)
     iso3 = models.CharField(max_length=3, unique=True)
@@ -36,7 +36,7 @@ class Country(models.Model):
     equivalent_fips_code = models.CharField(max_length=4, blank=True, null=True)
 
     @staticmethod
-    def get_by_request(request) -> 'Country':
+    def get_by_request(request) -> "Country":
         """Get a Country object from `request`, via the COUNTRIES_PLUS_COUNTRY_HEADER"""
 
         country = None
@@ -61,7 +61,7 @@ class Country(models.Model):
         except AttributeError:
             pass
 
-        geoip_request_iso = request.META.get(header_name, '')
+        geoip_request_iso = request.META.get(header_name, "")
         if geoip_request_iso:
             try:
                 country = Country.objects.get(iso=geoip_request_iso.upper())

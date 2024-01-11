@@ -74,11 +74,11 @@ Ready to contribute? Here's how to set up `django-countries-plus` for local deve
 
    Now you can make your changes locally.
 
-5. When you're done making changes, check that your changes pass flake8 and the
-   tests, including testing other Python versions with tox::
+5. When you're done making changes, check that your changes are lint free, formatted, and pass the tests,
+   including testing other Python versions with tox::
 
-        $ flake8 countries_plus tests
-        $ python setup.py test
+        $ ruff check .
+        # ruff format
         $ tox
 
    To get flake8 and tox, just pip install them into your virtualenv.
@@ -100,13 +100,6 @@ Before you submit a pull request, check that it meets these guidelines:
 2. If the pull request adds functionality, the docs should be updated. Put
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
-3. The pull request should work for Python 2.6, 2.7, and 3.3, and for PyPy. Check
-   https://travis-ci.org/cordery/django-countries-plus/pull_requests
-   and make sure that the tests pass for all supported Python versions.
-
-Tips
-----
-
-To run a subset of tests::
-
-    $ python -m unittest tests.test_countries_plus
+3. The pull request should work for the Python & Django versions specified in
+   tox.ini. Run tox and make sure that the tests pass for all supported Python
+   versions.
